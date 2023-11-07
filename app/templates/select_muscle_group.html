@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Try django</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <form method="post">
+    {% csrf_token %}
+    {{ form.muscle_group }}
+    <input type="text" name="{{ form.other_muscle_group.name }}" id="other-input" style="display: none;">
+    <button type="submit">Submit</button>
+    </form>
+    <script>
+    const muscleGroup = document.getElementById('id_muscle_group');
+    const otherInput = document.getElementById('other-input');
+
+    muscleGroup.addEventListener('change', function() {
+        if (muscleGroup.value === "Other") {
+            otherInput.style.display = 'block';
+        } else {
+            otherInput.style.display = 'none';
+        }
+    });
+    </script>
+</body>
+</html>

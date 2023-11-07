@@ -7,12 +7,12 @@
 <body>
     <form method="post">
     {% csrf_token %}
-    {{ form.muscle_group }}
-    <input type="text" name="{{ form.other_muscle_group.name }}" id="other-input" style="display: none;">
+    {{ form.choices }}
+    <input type="text" name="{{ form.other_choice.name }}" id="other-input" style="display: none;">
     <button type="submit">Submit</button>
     </form>
     <script>
-    const muscleGroup = document.getElementById('id_muscle_group');
+    const muscleGroup = document.getElementById('id_choices');
     const otherInput = document.getElementById('other-input');
 
     muscleGroup.addEventListener('change', function() {

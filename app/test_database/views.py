@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 
 # Create your views here.
-from .models import exercise, MuscleGroup
-from .form import ExerciseForm, MuscleGroupForm
+from .models import exercise, MuscleGroup, Muscle, Machine
+from .form import ExerciseForm, MuscleGroupForm, MuscleForm, MachineForm
 
 def index(request):
     data = exercise.objects.all()
@@ -64,8 +64,9 @@ def select_muscle_group(request):
     if request.method == 'POST':
         form = MuscleGroupForm(request.POST)
         if form.is_valid():
-            muscle_group = form.cleaned_data['muscle_group']
-            other_muscle_group = form.cleaned_data['other_muscle_group']
+            muscle_group = form.cleaned_data['choices']
+            other_muscle_group = form.cleaned_data['other_choice']
+            print(form.cleaned_data)
             print("here -",muscle_group)
             if muscle_group =="Other":
                 # muscle_group = MuscleGroup.objects.create(name=other_muscle_group)
@@ -80,5 +81,39 @@ def select_muscle_group(request):
 
     return render(request, 'select_muscle_group.html', {'form': form})
 
+def select_muscle(request):
+    if request.method == 'POST':
+        form = MuscleForm(request.POST)
+        if form.is_valid():
+            muscle = form.cleaned_data['muscle']
+            muscle_id, muscle_name = muscle.split(":")
+            print(form.cleaned_data)
+            print(f"here -{muscle_name}-{muscle_id}")
+            return redirect('data')
+        else:
+            print(form.errors)
+    else:
+        form = MuscleForm()
 
+    return render(request, 'form.html', {'form': form})
 
+def select_machine(request):
+    if request.method == 'POST':
+        form = MachineForm(request.POST)
+        if form.is_valid():
+            machine = form.cleaned_data['choices']
+            other_machine = form.cleaned_data['other_choice']
+            print(form.cleaned_data)
+            print("here -",machine)
+            if machine =="Other":
+                # muscle_group = MachineForm.objects.create(name=other_muscle_group)
+                print("Custom value entered: ", other_machine)
+            else:
+                print("Selected muscle group: ", machine)
+            return redirect('data')
+        else:
+            print(form.errors)
+    else:
+        form = MachineForm()
+
+    return render(request, 'select_muscle_group.html', {'form': form})

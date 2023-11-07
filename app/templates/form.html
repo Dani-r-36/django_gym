@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Try django</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<form method="POST" action="." >{% csrf_token %} 
+  {{form.as_p}}
+  <button type="submit">Send</button>
+</form>
+</body>
+</html>

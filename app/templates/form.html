@@ -5,9 +5,20 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+
+
+<!--     
 <form method="POST" action="." >{% csrf_token %} 
   {{form.as_p}}
   <button type="submit">Send</button>
+</form> -->
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {{ machine_form.as_p }}
+    {{ muscle_form.as_p }}
+    <button type="submit">Create Exercise</button>
 </form>
+
 </body>
 </html>

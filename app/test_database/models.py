@@ -43,11 +43,12 @@ class Muscle(models.Model):
     def __str__(self):
         return self.muscle_name
 
-class exercise(models.Model):
+class Exercise(models.Model):
     ID = models.AutoField(primary_key=True, db_column='exercise_id')
     exercise_name = models.CharField(max_length=20, db_column='exercise_name')
-    machine = models.ForeignKey(Machine, on_delete=models.CASCADE)  # Use 'machine' instead of 'machine_name'
-    muscle = models.ForeignKey(Muscle, on_delete=models.CASCADE)
+    machine = models.ManyToManyField(Machine)
+    muscle = models.ManyToManyField(Muscle)
+    
     class Meta:
         db_table = 'exercise'
 

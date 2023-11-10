@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
 
 # Create your views here.
-from .models import exercise, MuscleGroup, Muscle, Machine
+from .models import Exercise, MuscleGroup, Muscle, Machine
 from .form import ExerciseForm, MuscleGroupForm, MuscleForm, MachineForm
 
 def index(request):
-    data = exercise.objects.all()
+    data = Exercise.objects.all()
     print(data)
     template_name = 'data.html'
     context = {"exercise":data}
@@ -84,9 +84,15 @@ def select_machine(request):
 #     return render(request, 'add_exercise.html', {'form': form})
 
 def add_exercise(request):
+    groups = MuscleGroup.objects.all()
+    muscle_data = Muscle.objects.all()
+    grouped_muscles = {}
+    for group in groups:
+        group_muscles = muscle_data.filter(group=group)
+        grouped_muscles[group] = group_muscles
+
     if request.method == 'POST':
         form = ExerciseForm(request.POST)
-        group = MuscleGroupForm(request.POST)
         machine_form = MachineForm(request.POST)
         muscle_form = MuscleForm(request.POST)
         if form.is_valid() and machine_form.is_valid() and muscle_form.is_valid():
@@ -95,31 +101,22 @@ def add_exercise(request):
             exercise = form.cleaned_data['exercise_name']
             muscle = muscle_form.cleaned_data['muscle']
             print(f"machine {machine},other machine {other_machine},exercsie{exercise}, muscle{muscle}")
-
+            machine_ids = [int(select_machine.split(':')[0]) for select_machine in machine]
+            muscle_ids = [int(select_muscles.split(':')[0]) for select_muscles in muscle]
+            print(machine_ids, muscle_ids)
+            new_exercise = Exercise.objects.create(exercise_name=exercise, machine=machine_ids, muscle=muscle_ids)
+            print("hsdfsdfsdfdaef")
+            # new_exercise.muscles.set(muscle_ids)
+            # new_exercise.machines.set(machine_ids)
+            new_exercise.save()
             return redirect('data.html')  # Redirect to a success page
     else:
         form = ExerciseForm()
         machine_form = MachineForm()
         muscle_form = MuscleForm()
-
-    return render(request, 'form.html', {'form': form, 'machine_form':machine_form, 'muscle_form':muscle_form})
-
-
+    context = {'form': form, 'machine_form':machine_form, 'muscle_form':muscle_form, 'grouped_muscles': grouped_muscles}
+    return render(request, 'form.html', context)
 
 
-def add_exercise(request):
-    if request.method == 'POST':
-        form = ExerciseForm(request.POST)
-        group_form = MuscleGroupForm(request.POST)
-        if form.is_valid() and group_form.is_valid():
-            muscle_group = group_form.cleaned_data['muscle_group']
-            exercise = form.cleaned_data['exercise_name']
-            print(f"muscle_group {muscle_group},exercsie{exercise}")
 
-            return redirect('data.html')  # Redirect to a success page
-    else:
-        form = ExerciseForm()
-        group_form = MuscleGroupForm()
-
-    return render(request, 'form.html', {'form': form, 'group_form':group_form})
 

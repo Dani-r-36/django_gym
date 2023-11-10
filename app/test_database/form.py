@@ -1,5 +1,5 @@
 from django import forms
-from .models import exercise, MuscleGroup, Muscle, Machine
+from .models import Exercise, MuscleGroup, Muscle, Machine
 
 # class ExerciseForm(forms.ModelForm):
 #     custom_machine_name = forms.CharField(max_length=50, required=False)
@@ -18,7 +18,7 @@ from .models import exercise, MuscleGroup, Muscle, Machine
 
 class ExerciseForm(forms.ModelForm):
     class Meta:
-        model = exercise
+        model = Exercise
         fields = ['exercise_name'] 
 
 
@@ -83,3 +83,15 @@ class MuscleForm(forms.Form):
         widget=forms.SelectMultiple(attrs={'class': 'selectpicker'}),
     )
 
+# class MuscleForm(forms.Form):
+#     muscle_group = forms.ChoiceField(
+#         choices=[("", "Select a muscle group")],
+#         required=False,
+#         widget=forms.Select(attrs={'class': 'selectpicker'}),
+#     )
+
+#     muscle = forms.MultipleChoiceField(
+#         choices=[("", "Select a muscle")],
+#         required=False,
+#         widget=forms.SelectMultiple(attrs={'class': 'selectpicker'}),
+#     )

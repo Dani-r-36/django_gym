@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% include "group.html" %} 
+{% block content %}
+<!-- exercise_list.html -->
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<h1>Exercise Details</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Exercise Name</th>
+            <th>Muscle</th>
+            <th>Muscle Group</th>
+            <th>Machine</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if exercise.muscles.all %}
+            {% for muscle in exercise.muscles.all %}
+                <tr>
+                    {% if forloop.first %}
+                        <td rowspan="{{ exercise.muscles.count }}">{{ exercise.exercise_name }}</td>
+                    {% endif %}
+                    <td>{{ muscle.name }}</td>
+                    <td>{{ muscle.group.name }}</td>
+                    <td>
+                        {% for machine in exercise.machines.all %}
+                            {{ machine.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td>{{ exercise.exercise_name }}</td>
+                <td>No muscles</td>
+                <td>No muscle group</td>
+                <td>
+                    {% for machine in exercise.machines.all %}
+                        {{ machine.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+
+{% endblock %}

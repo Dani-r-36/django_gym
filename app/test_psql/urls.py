@@ -16,13 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from test_database.views import index, add_exercise, select_muscle_group, select_muscle, select_machine
+from test_database.views import exercise_list, add_exercise, select_muscle_group, select_muscle, select_machine, exercise_detail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index),
+    path('', exercise_list),
     path('add_exercise/',add_exercise, name='add_exercise'),
     path('group_muscle/',select_muscle_group, name='select_exercise'),
     path('muscle/',select_muscle, name='select_muscle'),
     path('machine/',select_machine, name='select_machine'),
+    path('exercise/<int:exercise_id>',exercise_detail, name='exercise_detail'),
 ]

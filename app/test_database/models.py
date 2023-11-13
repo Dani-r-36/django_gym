@@ -33,8 +33,8 @@ class MuscleGroup(models.Model):
     
 
 class Muscle(models.Model):
-    muscle_id = models.AutoField(primary_key=True, db_column='muscle_id')
-    muscle_name = models.CharField(max_length=70, db_column='muscle_name')
+    ID = models.AutoField(primary_key=True, db_column='muscle_id')
+    name = models.CharField(max_length=70, db_column='muscle_name')
     group = models.ForeignKey(MuscleGroup,on_delete=models.CASCADE)
 
     class Meta:
@@ -42,12 +42,32 @@ class Muscle(models.Model):
     
     def __str__(self):
         return self.muscle_name
+    
+class ExerciseMuscle(models.Model):
+    ID = models.AutoField(primary_key=True, db_column='exercise_muscle_id')
+    exercise = models.ForeignKey('Exercise', on_delete=models.CASCADE)
+    muscle = models.ForeignKey('Muscle', on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'exercise_muscle'
+        unique_together = ('exercise', 'muscle')
+        managed = False
+
+class ExerciseMachine(models.Model):
+    ID = models.AutoField(primary_key=True, db_column='exercise_machine_id')
+    exercise = models.ForeignKey('Exercise', on_delete=models.CASCADE)
+    machine = models.ForeignKey('Machine', on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'exercise_machine'
+        unique_together = ('exercise', 'machine')
+
 
 class Exercise(models.Model):
     ID = models.AutoField(primary_key=True, db_column='exercise_id')
     exercise_name = models.CharField(max_length=20, db_column='exercise_name')
-    machine = models.ManyToManyField(Machine)
-    muscle = models.ManyToManyField(Muscle)
+    muscles = models.ManyToManyField(Muscle, through='ExerciseMuscle')
+    machines = models.ManyToManyField(Machine, through='ExerciseMachine')
     
     class Meta:
         db_table = 'exercise'

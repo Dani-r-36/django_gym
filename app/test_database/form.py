@@ -71,7 +71,7 @@ class MuscleForm(forms.Form):
         ("", "Select a muscle"),  # Empty value as the initial choice
     ]
     # Get the available muscle groups from the database
-    muscles = Muscle.objects.values_list('muscle_id', 'muscle_name')
+    muscles = Muscle.objects.values_list('ID', 'name')
     
     # Extend the choices list with the muscle groups from the database
     CHOICES.extend([(f"{str(id)}:{name}", name) for id, name in muscles])

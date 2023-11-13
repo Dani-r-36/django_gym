@@ -4,21 +4,38 @@
     <title>Try django</title>
 </head>
 <body>
-    <table>
-        <thead>
+<h1>Exercise List</h1>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Exercise Name</th>
+            <th>Muscles</th>
+            <th>Machines</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for exercise in exercises %}
             <tr>
-                <th>ID</th>
-                <th>Name</th>
+                <td>{{ exercise.exercise_name }}</td>
+                <td>
+                    <ul>
+                        {% for muscle in exercise.muscles.all %}
+                            <li>{{ muscle.name }} ({{ muscle.group.name }})</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        {% for machine in exercise.machines.all %}
+                            <li>{{ machine.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            {% for item in exercise %}
-                <tr>
-                    <td>{{ item.ID }}</td>
-                    <td>{{ item.Name }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        {% endfor %}
+    </tbody>
+</table>
+
 </body>
 </html>

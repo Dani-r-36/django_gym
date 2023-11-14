@@ -1,15 +1,18 @@
 
-    <tbody>
-        {% for group, group_muscles in grouped_muscles.items %}
-            <tr>
-                <td>{{ group.name }}</td>
-                <td>
-                    {% for muscle in group_muscles %}
-                        {{ muscle.muscle_name }}
-                        {% if not forloop.last %}, {% endif %}
-                    {% endfor %}
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Group Muscles</th>
+            {% for group, group_muscles in grouped_muscles.items %}
+                <th>{{ group }}</th>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>Sub muscle</td>
+            {% for group, group_muscles in grouped_muscles.items %}
+                
+                    <td>{{ group_muscles.all|join:", " }}</td>
+            {% endfor %}
+        </tr>
+    </thead>
 </table>

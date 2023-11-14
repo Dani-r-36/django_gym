@@ -41,7 +41,7 @@ class Muscle(models.Model):
         db_table = 'muscle'
     
     def __str__(self):
-        return self.muscle_name
+        return self.name
     
 class ExerciseMuscle(models.Model):
     ID = models.AutoField(primary_key=True, db_column='exercise_muscle_id')

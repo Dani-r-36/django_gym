@@ -1,6 +1,8 @@
 {% extends "base.html" %}
-{% include "group.html" %} 
+group
+group
 {% block content %}
+{% include "group.html" %} 
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}

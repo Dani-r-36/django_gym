@@ -25,5 +25,5 @@ urlpatterns = [
     path('group_muscle/',select_muscle_group, name='select_exercise'),
     path('muscle/',select_muscle, name='select_muscle'),
     path('machine/',select_machine, name='select_machine'),
-    path('exercise/<int:exercise_id>',exercise_detail, name='exercise_detail'),
+    path('exercise/',exercise_detail, name='exercise_detail'),
 ]

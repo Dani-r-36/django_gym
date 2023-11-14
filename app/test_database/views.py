@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-
+from django.http import HttpResponse
 # Create your views here.
 from .models import Exercise, MuscleGroup, Muscle, Machine,  ExerciseMuscle, ExerciseMachine
 from .form import ExerciseForm, MuscleGroupForm, MuscleForm, MachineForm
@@ -11,8 +11,20 @@ def exercise_list(request):
     context = {"exercises":data}
     return render(request, template_name, context)
 
-def exercise_detail(request, exercise_id):
-    exercise = get_object_or_404(Exercise, ID=exercise_id)
+def exercise_detail(request):
+    exercise_id = request.GET.get('exercise_id')
+    print("redirected here")
+    if not exercise_id:
+        # Handle the case where exercise_id is not provided
+        return HttpResponse("Please provide a valid Exercise ID.")
+    print(request)
+    print(exercise_id)
+    try:
+        exercise = get_object_or_404(Exercise, ID=exercise_id)
+        context = {"exercise":exercise}
+    except ValueError:
+        # Handle the case where exercise_id is not a valid integer
+        return HttpResponse("Invalid Exercise ID. Please enter a valid integer.")
     context = {"exercise":exercise}
     return render(request, "exercise.html", context)
 
@@ -82,7 +94,6 @@ def add_exercise(request):
     for group in groups:
         group_muscles = muscle_data.filter(group=group)
         grouped_muscles[group] = group_muscles
-
     if request.method == 'POST':
         form = ExerciseForm(request.POST)
         machine_form = MachineForm(request.POST)

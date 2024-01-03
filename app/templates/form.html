@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load custom_filters %}
 group
 group
 {% block content %}
@@ -8,6 +9,10 @@ group
     {{ form.as_p }}
     {{ machine_form.as_p }}
     {{ muscle_form.as_p }}
+    Intensity: {{detail.intensity}}<br>0 to 3 where 0 is not intense and 3 is intense<br>
+    Tips: {{detail.tips}}<br>
+    Optimum: {{detail.optimum}}<br>0 to 3 where 0 is not optimum and 3 is optimum<br>
+    Link: {{detail.link}}
     <button type="submit">Create Exercise</button>
 </form>
 {% endblock %}

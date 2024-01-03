@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 # Create your views here.
-from .models import Exercise, MuscleGroup, Muscle, Machine,  ExerciseMuscle, ExerciseMachine
-from .form import ExerciseForm, MuscleGroupForm, MuscleForm, MachineForm
+from .models import Exercise, MuscleGroup, Muscle, Machine,  ExerciseMuscle, ExerciseMachine, ExerciseDetails, CurrentLift
+from .form import ExerciseForm, MuscleGroupForm, MuscleForm, MachineForm, ExerciseDetailsForm, CurrentLiftForm
 
 def exercise_list(request):
     data = Exercise.objects.all()
@@ -12,21 +12,57 @@ def exercise_list(request):
     return render(request, template_name, context)
 
 def exercise_detail(request):
+    print(request)
     exercise_id = request.GET.get('exercise_id')
     print("redirected here")
     if not exercise_id:
         # Handle the case where exercise_id is not provided
         return HttpResponse("Please provide a valid Exercise ID.")
-    print(request)
-    print(exercise_id)
+
     try:
         exercise = get_object_or_404(Exercise, ID=exercise_id)
-        context = {"exercise":exercise}
+        exercise_details, created = ExerciseDetails.objects.get_or_create(exercise=exercise)
+        current_lift = None
+        if exercise_details.current_id:
+            current_lift = CurrentLift.objects.get(ID=exercise_details.current_id)
+
+            print(vars(current_lift))
+        if request.method == 'POST':
+            form = CurrentLiftForm(request.POST)
+            if form.is_valid():
+                current_lift = form.save(commit=False)
+                current_lift.exercise_details = exercise_details
+                current_lift.save()
+
+                 # Update ExerciseDetails with the new CurrentLift
+                exercise_details.current = current_lift
+                exercise_details.save()
+                print("Redirecting to exercise_detail with exercise_id:", exercise_details.exercise_id)
+                return redirect(request.META.get('HTTP_REFERER'))
+        else:
+            form = CurrentLiftForm()
+            print(vars(exercise_details))
+            print(exercise_details.current_id)
+            print(exercise_details.ID)
+            attribute_dict = {'id':exercise_details.ID, 
+            'intensity': exercise_details.intensity, 'tips': exercise_details.tips,'optimum': exercise_details.optimum, 'link': exercise_details.link}
+            if current_lift != None:
+                attribute_dict['weight'] = current_lift.weight
+                attribute_dict['reps'] = current_lift.reps
+            context = {
+                'exercise': exercise,
+                'details': attribute_dict,  # Pass the exercise_details object directly
+                'form': form,
+            }
+            print("got context")
+
+        return render(request, "exercise.html", context)
+
+    except ExerciseDetails.DoesNotExist:
+        return HttpResponse("Exercise details not found.")
     except ValueError:
-        # Handle the case where exercise_id is not a valid integer
         return HttpResponse("Invalid Exercise ID. Please enter a valid integer.")
-    context = {"exercise":exercise}
-    return render(request, "exercise.html", context)
+
 
 def select_muscle_group(request):
     if request.method == 'POST':
@@ -98,7 +134,8 @@ def add_exercise(request):
         form = ExerciseForm(request.POST)
         machine_form = MachineForm(request.POST)
         muscle_form = MuscleForm(request.POST)
-        if form.is_valid() and machine_form.is_valid() and muscle_form.is_valid():
+        details_form = ExerciseDetailsForm(request.POST)
+        if form.is_valid() and machine_form.is_valid() and muscle_form.is_valid() and details_form.is_valid():
             machine = machine_form.cleaned_data['machines']
             other_machine = machine_form.cleaned_data['other_choice']
             exercise = form.cleaned_data['exercise_name']
@@ -111,18 +148,19 @@ def add_exercise(request):
             print(new_exercise.ID)
             for muscle_id in muscle_ids:
                 ExerciseMuscle.objects.create(exercise_id=new_exercise.ID, muscle_id=muscle_id)
-                # exercise_muscle_instance.save()
             # Link machines to the exercise and create instances in the junction table
             for machine_id in machine_ids:
                 exercise_machine_instance=ExerciseMachine.objects.create(exercise_id=new_exercise.ID, machine_id=machine_id)
-                # exercise_machine_instance.save()
-            # new_exercise.save()
-            return redirect('data.html')  # Redirect to a success page
+            details = details_form.save(commit=False)
+            details.exercise = new_exercise
+            details.save()
+            return render(request, 'data.html', {"exercises":Exercise.objects.all()})  # Redirect to a success page
     else:
         form = ExerciseForm()
         machine_form = MachineForm()
         muscle_form = MuscleForm()
-    context = {'form': form, 'machine_form':machine_form, 'muscle_form':muscle_form, 'grouped_muscles': grouped_muscles}
+        details_form = ExerciseDetailsForm()
+    context = {'form': form, 'machine_form':machine_form, 'muscle_form':muscle_form, 'grouped_muscles': grouped_muscles, 'detail':details_form}
     return render(request, 'form.html', context)
 
 

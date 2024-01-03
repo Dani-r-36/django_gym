@@ -62,15 +62,44 @@ class ExerciseMachine(models.Model):
         db_table = 'exercise_machine'
         unique_together = ('exercise', 'machine')
 
+    
+class CurrentLift(models.Model):
+    ID = models.AutoField(primary_key=True, db_column='current_id')
+    weight = models.FloatField(max_length=10, db_column='max_working_weight')
+    reps = models.CharField(max_length=10, db_column='max_reps')
+    # exercise_details = models.OneToOneField('ExerciseDetails', on_delete=models.CASCADE)
+    
+    class Meta:
+        db_table = 'current_lift'
+
+    # def __str__(self):
+    #     return self.weight
 
 class Exercise(models.Model):
     ID = models.AutoField(primary_key=True, db_column='exercise_id')
     exercise_name = models.CharField(max_length=20, db_column='exercise_name')
     muscles = models.ManyToManyField(Muscle, through='ExerciseMuscle')
     machines = models.ManyToManyField(Machine, through='ExerciseMachine')
-    
+    # exercise_details = models.OneToOneField('ExerciseDetails', on_delete=models.CASCADE, null=True, blank=True, related_name='exercise_details')
+
     class Meta:
         db_table = 'exercise'
 
     def __str__(self):
         return self.exercise_name
+    
+    
+class ExerciseDetails(models.Model):
+    ID = models.AutoField(primary_key=True, db_column='exercise_details_id')
+    exercise = models.ForeignKey("Exercise", on_delete=models.CASCADE)
+    current = models.OneToOneField("CurrentLift", on_delete=models.CASCADE, null=True, blank=True)
+    intensity = models.CharField(max_length=20, db_column='intensity')
+    tips = models.CharField(max_length=200, db_column='tips')
+    optimum = models.CharField(max_length=20, db_column='optimum_level')
+    link = models.CharField(max_length=300, db_column='picture_video_link')
+    
+    class Meta:
+        db_table = 'exercise_details'
+
+    # def __str__(self):
+    #     return self.exercise_name

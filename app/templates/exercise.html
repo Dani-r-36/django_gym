@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% include "group.html" %} 
 {% block content %}
+{% load custom_filters %}
 <!-- exercise_list.html -->
 <h1>Exercise Details</h1>
-
 <table>
     <thead>
         <tr>
@@ -43,5 +43,25 @@
         {% endif %}
     </tbody>
 </table>
+<table>
+        <tr>
+            <th>Attribute</th>
+            <th>Value</th>
+        </tr>
+        {% for key, value in details.items %}
+            {% if forloop.counter > 1%}
+            <tr>
+                <td>{{ key }}</td>
+                <td>{{ value }}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+<h3>Add or Edit Current Lift Information</h3>
+<form method="post" >
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Current Lift</button>
+</form>
 
 {% endblock %}

@@ -1,20 +1,5 @@
 from django import forms
-from .models import Exercise, MuscleGroup, Muscle, Machine
-
-# class ExerciseForm(forms.ModelForm):
-#     custom_machine_name = forms.CharField(max_length=50, required=False)
-#     class Meta:
-#         model = exercise
-#         fields = ['exercise_name', 'machine', 'muscle']  # Define the fields you want the user to input
-#     def clean(self):
-#         cleaned_data = super().clean()
-#         machine = cleaned_data.get('machine')
-#         custom_machine_name = cleaned_data.get('custom_machine_name')
-
-#         if machine.is_other_option and not custom_machine_name:
-#             raise forms.ValidationError("Custom machine name is required when choosing 'Other'.")
-
-#         return cleaned_data
+from .models import Exercise, MuscleGroup, Muscle, Machine, ExerciseDetails, CurrentLift
 
 class ExerciseForm(forms.ModelForm):
     class Meta:
@@ -83,15 +68,12 @@ class MuscleForm(forms.Form):
         widget=forms.SelectMultiple(attrs={'class': 'selectpicker'}),
     )
 
-# class MuscleForm(forms.Form):
-#     muscle_group = forms.ChoiceField(
-#         choices=[("", "Select a muscle group")],
-#         required=False,
-#         widget=forms.Select(attrs={'class': 'selectpicker'}),
-#     )
+class ExerciseDetailsForm(forms.ModelForm):
+    class Meta:
+        model = ExerciseDetails
+        fields = ['intensity', 'tips','optimum', 'link'] 
 
-#     muscle = forms.MultipleChoiceField(
-#         choices=[("", "Select a muscle")],
-#         required=False,
-#         widget=forms.SelectMultiple(attrs={'class': 'selectpicker'}),
-#     )
+class CurrentLiftForm(forms.ModelForm):
+    class Meta:
+        model = CurrentLift
+        fields = ['weight', 'reps'] 

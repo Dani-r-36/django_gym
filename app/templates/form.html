@@ -6,13 +6,22 @@ group
 {% include "group.html" %} 
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    {{ machine_form.as_p }}
-    {{ muscle_form.as_p }}
-    Intensity: {{detail.intensity}}<br>0 to 3 where 0 is not intense and 3 is intense<br>
-    Tips: {{detail.tips}}<br>
-    Optimum: {{detail.optimum}}<br>0 to 3 where 0 is not optimum and 3 is optimum<br>
-    Link: {{detail.link}}
-    <button type="submit">Create Exercise</button>
+    <div class="exercise-choices">
+         <label class="form-label" for="{{ form.exercise_name.id_for_label }}">Exercise name:</label>
+            {{ form.exercise_name }}
+        {{ machine_form.as_p }}
+        {{ muscle_form.as_p }}
+    </div>
+    <div class="new-exercise">
+        <label class="form-label" for="id_weight">Intensity:</label>
+        {{detail.intensity}}
+        <label class="form-label" for="id_weight">Tips:</label>
+        {{detail.tips}}
+        <label class="form-label" for="id_weight">Optimum:</label>
+        {{detail.optimum}}
+        <label class="form-label" for="id_weight">Link:</label>
+        {{detail.link}}
+    </div>
+    <button class ="submit-button" type="submit">Create Exercise</button>
 </form>
 {% endblock %}

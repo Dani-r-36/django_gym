@@ -58,10 +58,18 @@
         {% endfor %}
     </table>
 <h3>Add or Edit Current Lift Information</h3>
-<form method="post" >
+<form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save Current Lift</button>
+    
+    <div class="current-lifts">
+        <label class="form-label" for="id_weight">Weight:</label>
+        <input type="text" id="id_weight" name="weight" placeholder="In kg (no units needed)" value="{{ current.weight }}" required>
+        <label class="form-label" for="id_weight">Reps:</label>
+        <input type="text" id="id_reps" name="reps" placeholder="F/S/JF8 (failed/scrapped/justfailed 8th)" value="{{ current.reps }}" required>
+    </div>
+    <div>
+        <button class ="submit-button" type="submit">Save Current Lift</button>
+
 </form>
 
 {% endblock %}

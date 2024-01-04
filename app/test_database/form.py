@@ -6,7 +6,6 @@ class ExerciseForm(forms.ModelForm):
         model = Exercise
         fields = ['exercise_name'] 
 
-
 class MachineForm(forms.Form):
     CHOICES = [
         ("", "Select a muscle group"),  # Empty value as the initial choice
@@ -72,6 +71,10 @@ class ExerciseDetailsForm(forms.ModelForm):
     class Meta:
         model = ExerciseDetails
         fields = ['intensity', 'tips','optimum', 'link'] 
+        widgets = {
+            'intensity': forms.TextInput(attrs={'placeholder': '0 is not intense and 3 is intense'}),
+            'optimum': forms.TextInput(attrs={'placeholder': '0 is not optimum and 3 is optimum'}),
+        }
 
 class CurrentLiftForm(forms.ModelForm):
     class Meta:

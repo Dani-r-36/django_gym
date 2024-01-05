@@ -13,15 +13,15 @@ def exercise_list(request):
 
 def exercise_detail(request):
     print(request)
-    exercise_id = request.GET.get('exercise_id')
+    exercise_name = request.GET.get('exercise_name')
     print("redirected here")
-    if not exercise_id:
+    if not exercise_name:
         # Handle the case where exercise_id is not provided
         return HttpResponse("Please provide a valid Exercise ID.")
 
     try:
-        exercise = get_object_or_404(Exercise, ID=exercise_id)
-        exercise_details, created = ExerciseDetails.objects.get_or_create(exercise=exercise)
+        exercise_info = get_object_or_404(Exercise, exercise_name=exercise_name)
+        exercise_details, created = ExerciseDetails.objects.get_or_create(exercise=exercise_info)
         current_lift = None
         if exercise_details.current_id:
             current_lift = CurrentLift.objects.get(ID=exercise_details.current_id)
@@ -37,7 +37,7 @@ def exercise_detail(request):
                  # Update ExerciseDetails with the new CurrentLift
                 exercise_details.current = current_lift
                 exercise_details.save()
-                print("Redirecting to exercise_detail with exercise_id:", exercise_details.exercise_id)
+                print("Redirecting to exercise_detail with exercise name:", exercise_name)
                 return redirect(request.META.get('HTTP_REFERER'))
         else:
             form = CurrentLiftForm()
@@ -50,7 +50,7 @@ def exercise_detail(request):
                 attribute_dict['weight'] = current_lift.weight
                 attribute_dict['reps'] = current_lift.reps
             context = {
-                'exercise': exercise,
+                'exercise': exercise_info,
                 'details': attribute_dict,  # Pass the exercise_details object directly
                 'form': form,
             }

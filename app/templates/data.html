@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-{% load custom_filters %}
 <h1>Exercise List</h1>
 <table border="1">
     <thead>
@@ -15,14 +14,14 @@
             <tr>
                 <td>{{ exercise.exercise_name }}</td>
                 <td>
-                    <ul>
+                    <ul class="muscle-groups">
                         {% for muscle in exercise.muscles.all %}
                             <li>{{ muscle.name }} ({{ muscle.group.name }})</li>
                         {% endfor %}
                     </ul>
                 </td>
                 <td>
-                    <ul>
+                    <ul class="machines">
                         {% for machine in exercise.machines.all %}
                             <li>{{ machine.name }}</li>
                         {% endfor %}

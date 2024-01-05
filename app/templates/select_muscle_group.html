@@ -6,7 +6,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <form method="post">
+    <form class="inputed-data" method="post">
     {% csrf_token %}
     {{ form.choices }}
     <input type="text" name="{{ form.other_choice.name }}" id="other-input" style="display: none;">

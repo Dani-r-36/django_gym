@@ -143,14 +143,16 @@ def add_exercise(request):
             print(f"machine {machine},other machine {other_machine},exercsie{exercise}, muscle{muscle}")
             machine_ids = [int(select_machine.split(':')[0]) for select_machine in machine]
             muscle_ids = [int(select_muscles.split(':')[0]) for select_muscles in muscle]
-            print(machine_ids, muscle_ids)
             new_exercise = Exercise.objects.create(exercise_name=exercise)
-            print(new_exercise.ID)
+            if machine == ['0:Other']:
+                new_machine = Machine.objects.create(name=other_machine.title())
+                exercise_machine_instance=ExerciseMachine.objects.create(exercise_id=new_exercise.ID, machine_id=new_machine.ID)
+            else:
+                for machine_id in machine_ids:
+                    exercise_machine_instance=ExerciseMachine.objects.create(exercise_id=new_exercise.ID, machine_id=machine_id)
             for muscle_id in muscle_ids:
                 ExerciseMuscle.objects.create(exercise_id=new_exercise.ID, muscle_id=muscle_id)
             # Link machines to the exercise and create instances in the junction table
-            for machine_id in machine_ids:
-                exercise_machine_instance=ExerciseMachine.objects.create(exercise_id=new_exercise.ID, machine_id=machine_id)
             details = details_form.save(commit=False)
             details.exercise = new_exercise
             details.save()

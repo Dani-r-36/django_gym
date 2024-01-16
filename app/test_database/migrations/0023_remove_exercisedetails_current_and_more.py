@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='currentlift',
             name='exercise_details',
-            field=models.OneToOneField(default=django.utils.timezone.now, on_delete=django.db.models.deletion.CASCADE, to='test_database.exercisedetails'),
+            field=models.OneToOneField(default=1, on_delete=django.db.models.deletion.CASCADE, to='test_database.exercisedetails'),
             preserve_default=False,
         ),
         migrations.AddField(

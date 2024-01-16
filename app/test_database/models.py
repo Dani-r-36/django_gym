@@ -1,22 +1,27 @@
 from django.db import models
 
-# Create your models here.
-
 
 class Machine(models.Model):
+    """Required fields for machine table"""
     ID = models.AutoField(primary_key=True, db_column='machine_id')
     name = models.CharField(max_length=50, db_column='machine_name')
 
+    """links to metadata from table machine, which stores the data"""
     class Meta:
         db_table = 'machine'
+        managed = False
     
+    """returns just name of machine when model called"""
     def __str__(self):
         return self.name
     
+    """creates a new machine instance called other, 
+    where classmethod allows us to call method on the class instead of just for that instance"""
     @classmethod
     def get_other_option(cls):
         return cls(name='Other')
 
+    """property deco allows us to access the attribute itself, where here we are checking if the name is other"""
     @property
     def is_other_option(self):
         return self.name == 'Other'

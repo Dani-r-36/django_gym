@@ -20,13 +20,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='exercise',
             name='machine',
-            field=models.ForeignKey(default=django.utils.timezone.now, on_delete=django.db.models.deletion.CASCADE, to='test_database.machine'),
+            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='test_database.machine'),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='exercise',
             name='muscle',
-            field=models.ForeignKey(default=django.utils.timezone.now, on_delete=django.db.models.deletion.CASCADE, to='test_database.muscle'),
+            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='test_database.muscle'),
             preserve_default=False,
         ),
     ]

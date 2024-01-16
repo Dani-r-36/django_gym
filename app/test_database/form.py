@@ -11,14 +11,20 @@ class MachineForm(forms.Form):
         ("", "Select a muscle group"),  # Empty value as the initial choice
     ]
     
-    # Get the available muscle groups from the database
+    # # Get the available muscle groups from the database
     machines = Machine.objects.values_list('ID', 'name')
     
-    # Extend the choices list with the muscle groups from the database
+    # # Extend the choices list with the muscle groups from the database
     CHOICES.extend([(f"{str(id)}:{name}", name) for id, name in machines])
     
-    # Add "Other" as a custom choice
+    # # Add "Other" as a custom choice
     CHOICES.append(("0:Other", "Other"))
+
+    # CHOICES = [
+    # ("", "Select a muscle group"),
+    # *((id, name) for id, name in machines),  # Directly use ID as a number
+    # (26, "Other"),  # Separate choice for "Other"
+# ]
     
     machines = forms.MultipleChoiceField(
         choices=CHOICES,

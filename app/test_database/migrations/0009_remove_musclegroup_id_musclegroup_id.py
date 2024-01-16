@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='musclegroup',
             name='ID',
-            field=models.AutoField(db_column='group_id', default=django.utils.timezone.now, primary_key=True, serialize=False),
+            field=models.AutoField(db_column='group_id', default=1, primary_key=True, serialize=False),
             preserve_default=False,
         ),
     ]

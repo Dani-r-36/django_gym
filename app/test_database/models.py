@@ -77,8 +77,8 @@ class CurrentLift(models.Model):
     class Meta:
         db_table = 'current_lift'
 
-    # def __str__(self):
-    #     return self.weight
+    def __str__(self):
+        return f'{self.weight} : {self.reps}'
 
 class Exercise(models.Model):
     ID = models.AutoField(primary_key=True, db_column='exercise_id')

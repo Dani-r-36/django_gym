@@ -12,11 +12,24 @@
     </div>
     <div class="new-exercise">
         <label class="form-label" for="id_weight">Intensity:</label>
-        {{detail.intensity}}
+        <div id="bootstrap-overrides" class="{% if detail.errors.intensity %}error{% endif %}">
+            {{ detail.intensity }}
+            {% if detail.errors.intensity %}
+                <ul id="bootstrap-overrides" class="errorlist">
+                    <li>{{detail.errors.intensity}}</li>
+                </ul>
+            {% endif %}
+        </div>
         <label class="form-label" for="id_weight">Tips:</label>
         {{detail.tips}}
         <label class="form-label" for="id_weight">Optimum:</label>
-        {{detail.optimum}}
+        <div id="bootstrap-overrides" class="{% if detail.errors.optimum %}error{% endif %}">
+            {{detail.optimum}}
+            {% if detail.errors.optimum %}
+                <ul id="bootstrap-overrides" class="errorlist">
+                    <li>{{detail.errors.optimum}}</li>
+                </ul>
+            {% endif %}
         <label class="form-label" for="id_weight">Link:</label>
         {{detail.link}}
     </div>

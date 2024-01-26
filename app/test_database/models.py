@@ -98,13 +98,13 @@ class ExerciseDetails(models.Model):
     ID = models.AutoField(primary_key=True, db_column='exercise_details_id')
     exercise = models.ForeignKey("Exercise", on_delete=models.CASCADE)
     current = models.OneToOneField("CurrentLift", on_delete=models.CASCADE, null=True, blank=True)
-    intensity = models.CharField(max_length=20, db_column='intensity')
+    intensity = models.IntegerField( db_column='intensity')
     tips = models.CharField(max_length=200, db_column='tips')
-    optimum = models.CharField(max_length=20, db_column='optimum_level')
+    optimum = models.IntegerField(db_column='optimum_level')
     link = models.CharField(max_length=300, db_column='picture_video_link')
     
     class Meta:
         db_table = 'exercise_details'
 
-    # def __str__(self):
-    #     return self.exercise_name
+    def __str__(self):
+        return f'{self.intensity} : {self.tips} : {self.optimum} : {self.link}'

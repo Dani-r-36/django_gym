@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
+from pprint import pprint
 # Create your views here.
 from .models import Exercise, MuscleGroup, Muscle, Machine,  ExerciseMuscle, ExerciseMachine, ExerciseDetails, CurrentLift
 from .form import ExerciseForm, MuscleGroupForm, MuscleForm, MachineForm, ExerciseDetailsForm, CurrentLiftForm
@@ -34,7 +35,8 @@ def exercise_detail(request):
                 current_lift.exercise_details = exercise_details
                 current_lift.save()
 
-                 # Update ExerciseDetails with the new CurrentLift
+                # Update ExerciseDetails with the new CurrentLift
+                pprint(vars(exercise_details))
                 exercise_details.current = current_lift
                 exercise_details.save()
                 print("Redirecting to exercise_detail with exercise name:", exercise_name)
@@ -122,6 +124,29 @@ def select_machine(request):
 
     return render(request, 'select_muscle_group.html', {'form': form})
 
+def sort_exercise_details(machine_form, form, muscle_form, details_form):
+    machine = machine_form.cleaned_data['machines']
+    other_machine = machine_form.cleaned_data['other_choice']
+    exercise = form.cleaned_data['exercise_name']
+    muscle = muscle_form.cleaned_data['muscle']
+    print(f"machine {machine},other machine {other_machine},exercsie{exercise}, muscle{muscle}")
+    machine_ids = [int(select_machine.split(':')[0]) for select_machine in machine]
+    muscle_ids = [int(select_muscles.split(':')[0]) for select_muscles in muscle]
+    new_exercise = Exercise.objects.create(exercise_name=exercise)
+    for equipment in machine:
+        print(equipment)
+        machine_id = int(equipment.split(':')[0])
+        if equipment == '0:Other':
+            new_machine = Machine.objects.create(name=other_machine.title())
+            exercise_machine_instance=ExerciseMachine.objects.create(exercise_id=new_exercise.ID, machine_id=new_machine.ID)
+        else:
+            exercise_machine_instance=ExerciseMachine.objects.create(exercise_id=new_exercise.ID, machine_id=machine_id)
+    for muscle_id in muscle_ids:
+        ExerciseMuscle.objects.create(exercise_id=new_exercise.ID, muscle_id=muscle_id)
+    # Link machines to the exercise and create instances in the junction table
+    details = details_form.save(commit=False)
+    details.exercise = new_exercise
+    details.save()
 
 def add_exercise(request):
     groups = MuscleGroup.objects.all()
@@ -136,26 +161,7 @@ def add_exercise(request):
         muscle_form = MuscleForm(request.POST)
         details_form = ExerciseDetailsForm(request.POST)
         if form.is_valid() and machine_form.is_valid() and muscle_form.is_valid() and details_form.is_valid():
-            machine = machine_form.cleaned_data['machines']
-            other_machine = machine_form.cleaned_data['other_choice']
-            exercise = form.cleaned_data['exercise_name']
-            muscle = muscle_form.cleaned_data['muscle']
-            print(f"machine {machine},other machine {other_machine},exercsie{exercise}, muscle{muscle}")
-            machine_ids = [int(select_machine.split(':')[0]) for select_machine in machine]
-            muscle_ids = [int(select_muscles.split(':')[0]) for select_muscles in muscle]
-            new_exercise = Exercise.objects.create(exercise_name=exercise)
-            if machine == ['0:Other']:
-                new_machine = Machine.objects.create(name=other_machine.title())
-                exercise_machine_instance=ExerciseMachine.objects.create(exercise_id=new_exercise.ID, machine_id=new_machine.ID)
-            else:
-                for machine_id in machine_ids:
-                    exercise_machine_instance=ExerciseMachine.objects.create(exercise_id=new_exercise.ID, machine_id=machine_id)
-            for muscle_id in muscle_ids:
-                ExerciseMuscle.objects.create(exercise_id=new_exercise.ID, muscle_id=muscle_id)
-            # Link machines to the exercise and create instances in the junction table
-            details = details_form.save(commit=False)
-            details.exercise = new_exercise
-            details.save()
+            sort_exercise_details(machine_form, form, muscle_form, details_form)
             return render(request, 'data.html', {"exercises":Exercise.objects.all()})  # Redirect to a success page
     else:
         form = ExerciseForm()
@@ -163,6 +169,7 @@ def add_exercise(request):
         muscle_form = MuscleForm()
         details_form = ExerciseDetailsForm()
     context = {'form': form, 'machine_form':machine_form, 'muscle_form':muscle_form, 'grouped_muscles': grouped_muscles, 'detail':details_form}
+    print("failed to post")
     return render(request, 'form.html', context)
 
 

@@ -82,6 +82,24 @@ class ExerciseDetailsForm(forms.ModelForm):
             'optimum': forms.TextInput(attrs={'placeholder': '0 is not optimum and 3 is optimum'}),
         }
 
+    def validate(self, name, value):
+        try:
+            # Attempt to convert the input to an integer
+            if not 0 <= int(value) <= 3:
+                raise forms.ValidationError(f'{name.capitalize()} must be between 0 and 3.')
+            return int(value)
+        except ValueError:
+            # If it's not a valid integer, raise a validation error
+            raise forms.ValidationError(f'{name.capitalize()} must be an integer.')
+    
+    def clean_intensity(self):
+        intensity = self.cleaned_data['intensity']
+        return self.validate("intensity", intensity)
+    
+    def clean_optimum(self):
+        optimum = self.cleaned_data['optimum']
+        return self.validate("optimum", optimum)
+
 class CurrentLiftForm(forms.ModelForm):
     class Meta:
         model = CurrentLift

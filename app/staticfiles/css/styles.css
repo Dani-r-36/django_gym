@@ -1,3 +1,14 @@
+#bootstrap-overrides .error {
+    color: red;  /* or any other styling you want */
+}
+
+.errorlist {
+    list-style-type: none;
+    color: red;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
 .muscle-groups, .machines {
         list-style-type: none;
         margin: 0;

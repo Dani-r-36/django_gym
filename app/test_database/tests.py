@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Machine, CurrentLift 
+from .models import Machine, CurrentLift, Exercise, ExerciseDetails
 # Create your tests here.
 
 class MachineTestCase(TestCase):
@@ -24,3 +24,33 @@ class CurrentTestCase(TestCase):
     def test_current_creation(self):
         current = CurrentLift.objects.create(ID = 1, weight=50, reps = "F7")
         self.assertEqual(str(current), '50 : F7')
+
+class ExerciseTestCase(TestCase):
+
+    def test_exercise_creation(self):
+        exercise = Exercise.objects.create(ID = 1, exercise_name = "Fake exercise")
+        self.assertEqual(str(exercise), "Fake exercise")
+
+class ExerciseDetailsTestCase(TestCase):
+
+    def test_exercise_creation(self):
+        exercise_instance = Exercise.objects.create(ID = 1, exercise_name = "Fake exercise")
+        current_instance = CurrentLift.objects.create(ID = 1, weight=50, reps = "F7")
+        exercise_details = ExerciseDetails.objects.create(ID = 1, exercise = exercise_instance, current = current_instance, intensity = 2, tips = "Tip", optimum = 2, link = "link")
+        self.assertEqual(str(exercise_details), "2 : Tip : 2 : link")
+    
+    def test_exercise_fail_creation(self):
+        exercise_instance = Exercise.objects.create(ID = 1, exercise_name = "Fake exercise")
+        current_instance = CurrentLift.objects.create(ID = 1, weight=50, reps = "F7")
+        with self.assertRaises(ValueError) as context:
+            exercise_details = ExerciseDetails.objects.create(
+                ID=1,
+                exercise=exercise_instance,
+                current=current_instance,
+                intensity="hello",
+                tips="Tip",
+                optimum=2,
+                link="link"
+            )
+        
+        self.assertIn("Field 'intensity' expected a number but got 'hello'", str(context.exception))

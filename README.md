@@ -12,7 +12,7 @@ This project is a Django-based web application that enables users to log and ret
 
 ## How It Works
 
-1. **SQL tables**: Initally I set up the tables required for the database called **gym**. The django app already has code to connect to DB.
+1. **SQL tables**: Initially I set up the tables required for the database called **gym**. The Django app already has code to connect to DB.
 
 2. **Web Interface**: A Django web application displays the stored exercises in a table format, with a search bar to filter exercises by type, weight, date, or any other attribute.
 
@@ -34,6 +34,6 @@ Ensure you have the following parameters set up in your .env file
 **DB_HOST**
 **DB_PORT**
 
-For a the original project which this was adapted from, check out [this project](https://github.com/Dani-r-36/gym).
+For the original project which this was adapted from, check out [this project](https://github.com/Dani-r-36/gym).
 
-**Note** This project was desinged for my own use and hasn't been upadted for others to use, but are welcome to :)
+**Note** This project was designed for my own use and hasn't been updated for others to use, but are welcome to use :)

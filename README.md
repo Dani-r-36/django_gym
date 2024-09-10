@@ -27,12 +27,12 @@ This project is a Django-based web application that enables users to log and ret
 
 ## .env file
 Ensure you have the following parameters set up in your .env file
-**SECRET_KEY**
-**DB_NAME**
-**DB_USER**
-**DB_PASSWORD**
-**DB_HOST**
-**DB_PORT**
+- **SECRET_KEY**
+- **DB_NAME**
+- **DB_USER**
+- **DB_PASSWORD**
+- **DB_HOST**
+- **DB_PORT**
 
 For the original project which this was adapted from, check out [this project](https://github.com/Dani-r-36/gym).
 
